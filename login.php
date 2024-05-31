@@ -3,6 +3,12 @@ require_once(__DIR__ . '../config/configuration.php');
 require_once(__DIR__ . '../config/validation.php');
 session_start();
 
+//if user already account 
+if (isset($_SESSION['user_id'])) {
+     $redirect_url = '/../public/user.php';
+        header("Location: " . $redirect_url);
+        exit();
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -13,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['user_name'] = $user['name'];
         $_SESSION['user_type'] = $user['type'];
         
-   $redirect_url = '/../public/user.php?id=' . $user['id'] . '&name=' . urlencode($user['name']);
+   $redirect_url = '/../public/user.php';
         header("Location: " . $redirect_url);
         exit();
     } else {

@@ -4,15 +4,27 @@ require_once(__DIR__ . '../config/validation.php');
 session_start();
 
 
+//if user already account
+if (isset($_SESSION['user_id'])) {
+     $redirect_url = '/../public/user.php';
+        header("Location: " . $redirect_url);
+        exit();
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
     $last_name = $_POST['last_name'];
     $full_name = $_POST['full_name'];
     $email = $_POST['email'];
     $password = $_POST['password'];
+
+    // Fetch user data from the session
+$user_id = $_SESSION['user_id'];
+$user_name = $_SESSION['user_name'];
+$user_type = $_SESSION['user_type'];
     
     Register($name, $last_name, $full_name, $email, $password);
-    header("Location: login.php");
+     $redirect_url = 'login.php?id=' . $user['id'] . '&name=' . urlencode($user['name']);
+        header("Location: " . $redirect_url);
     exit();
 }
 

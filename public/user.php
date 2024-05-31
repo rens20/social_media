@@ -13,7 +13,8 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'];
 $user_type = $_SESSION['user_type'];
-
+// echo json_encode($_SESSION);
+// die();
 // Process post submission
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['post_content'])) {
     $content = htmlspecialchars($_POST['post_content']); // Sanitize the input
@@ -44,8 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['post_content'])) {
 }
 
 // Fetch posts for the current user from the database
-if (isset($_GET['id']) && $_GET['id'] == $user_id) {
-    $user_page_id = $_GET['id'];
+if (isset($_SESSION['user_id'])) {
+    $user_page_id = $_SESSION['user_id'];
     $sql_posts = "SELECT * FROM posts WHERE user_id = '$user_page_id' ORDER BY created_at DESC";
     $result_posts = $conn->query($sql_posts);
 } else {
@@ -58,8 +59,11 @@ if (isset($_GET['id']) && $_GET['id'] == $user_id) {
 $sql_posts = "SELECT posts.*, 
               (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS like_count,
               (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = '$user_id') AS user_liked
-              FROM posts ORDER BY created_at DESC";
+
+              
+              FROM posts WHERE posts.user_id = {$user_id} ORDER BY created_at DESC"; //
 $result_posts = $conn->query($sql_posts);
+
 ?>
 
 <!DOCTYPE html>
